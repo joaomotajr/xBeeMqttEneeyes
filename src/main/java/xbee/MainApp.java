@@ -16,12 +16,11 @@ import com.digi.xbee.api.exceptions.XBeeException;
  * 
  * <p>For a complete description on the example, refer to the 'ReadMe.txt' file
  * included in the root directory.</p>
- * Ene Broker :: 177.144.134.145:8090
+ * Ene Broker :: 177.144.134.145:1883
  */
 public class MainApp {
 	
-	/* Constants */ 
-	private static final String PORT = "COM3";
+	/* Constants */	
 	private static final int BAUD_RATE = 9600;
 	
 	public static final Logger logger = LogManager.getLogger(MainApp.class);
@@ -35,20 +34,24 @@ public class MainApp {
 		BasicConfigurator.configure();
 		 
 		System.out.println(" +-----------------------------------------+");
-		System.out.println(" |  XBee ENEEYES - PUBLISHER TO MQTT  |");
+		System.out.println(" |  XBee ENEEYES - PUBLISHER TO MQTT       |");
 		System.out.println(" +-----------------------------------------+\n");
 		
-		if (args.length < 1 || args[0].isEmpty() ) {
-			throw new IllegalArgumentException("Você deve especificar: IP/Porta do Broker");
+		if (args.length < 2 || args[0].isEmpty() ) {
+			throw new IllegalArgumentException("Você deve especificar: IP:Porta do Broker e Porta COM");
 		}
 		
 		logger.info("Initialing Integrator XBee -> E-Gas");
 		
-		XBeeDevice myDevice = new XBeeDevice(PORT, BAUD_RATE);
+		String broker = "tcp://" + args[0];
+		String comPort = args[1];
 		
-		try {
-			
-			String broker = "tcp://" + args[0] + ":1883";			
+		logger.info("MQTT Broker IP  :: " + broker + " || Virtual Usb Port :: " + comPort);
+		
+		XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
+		
+		try {			
+						
 					
 			myDevice.open();
 			

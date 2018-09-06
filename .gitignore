@@ -11,3 +11,5 @@ activemq-data/*
 /target/
 /bin
 hs_err_pid21144.log
+
+*.log

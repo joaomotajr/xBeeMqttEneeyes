@@ -2,7 +2,6 @@ package xbee;
 
 
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -31,39 +30,40 @@ public class MainApp {
 	 * @param args Command line arguments.
 	 */
 	public static void main(String[] args) {
-		BasicConfigurator.configure();
+				
+		logger.info("Initialing Integrator XBee -> E-Gas (MQTT-Server)");
 		 
 		System.out.println(" +-----------------------------------------+");
 		System.out.println(" |  XBee ENEEYES - PUBLISHER TO MQTT       |");
 		System.out.println(" +-----------------------------------------+\n");
 		
 		if (args.length < 2 || args[0].isEmpty() ) {
-			throw new IllegalArgumentException("Você deve especificar: IP:Porta do Broker e Porta COM");
-		}
-		
-		logger.info("Initialing Integrator XBee -> E-Gas");
+			logger.error("Você deve especificar: IP:Porta do Broker e Porta COM do xBee");			
+			System.exit(1);
+		}				
 		
 		String broker = "tcp://" + args[0];
 		String comPort = args[1];
 		
-		logger.info("MQTT Broker IP  :: " + broker + " || Virtual Usb Port :: " + comPort);
-		
-		XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
-		
+		logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+				
 		try {			
 						
-					
+			logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+			XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
 			myDevice.open();
+			
+			logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
 			
 			MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
 			dataReceiveListener.setBroker(broker);
 			myDevice.addDataListener(dataReceiveListener);
 			
-			System.out.println("\n>> Waiting for data...");
+			System.out.println("\n>> Esperando por Dados dos Routers...");
 						
 		} catch (XBeeException e) {
 			
-			logger.error("Sorry, something wrong!", e);
+			logger.error("Ops! Há Algo errado, verifique\n", e);
 			System.exit(1);
 		}
 	}

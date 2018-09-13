@@ -2,11 +2,17 @@ package xbee;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
+
+import model.Position;
+import service.JsonService;
 
 /**
  * XBee Java Library Receive Data sample application.
@@ -30,6 +36,19 @@ public class MainApp {
 	 * @param args Command line arguments.
 	 */
 	public static void main(String[] args) {
+		
+		JsonService js = new JsonService();
+		js.setNameFile("deviceStatus.json");
+		js.createFile();
+		js.update(new Position("E_GAS", "Sensor1", "NO2", 172, 230.34));
+		
+		List<Position> positions = new ArrayList<Position>();
+		positions.add(new Position("E_GAS", "Sensor1", "NO2", 172, 230.34));
+		positions.add(new Position("E_GAS", "Sensor2", "CA", 173, 20.34));
+		positions.add(new Position("E_GAS", "Sensor3", "O", 174, 59.34));
+		
+		js.create(positions);
+		
 				
 		logger.info("Initialing Integrator XBee -> E-Gas (MQTT-Server)");
 		 

@@ -3,11 +3,15 @@ package xbee;
 
 
 
+import java.math.BigDecimal;
+
 import com.digi.xbee.api.listeners.IDataReceiveListener;
 import com.digi.xbee.api.models.XBee64BitAddress;
 import com.digi.xbee.api.models.XBeeMessage;
 
+import model.Position;
 import mqtt.Publisher;
+import service.JsonService;
 
 /**
  * Class to manage the XBee received data that was sent by other modules in the 
@@ -27,6 +31,7 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 	 */
 	
 	private String broker;		
+	JsonService js = new JsonService("deviceStatus.json");
 
 	public String getBroker() {
 		return broker;
@@ -54,8 +59,11 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 			return;
 
 		try {
-						
-			Publisher.Execute(broker, value[2], value[3]);
+			String id = value[2];
+			String valor = value[3];
+			
+			Publisher.Execute(broker, id, valor);
+			js.update(new Position("E_GAS", "Sensor4", "O", Integer.parseInt(id), new BigDecimal(valor)));
 			
 			
 		} catch (Exception e) {

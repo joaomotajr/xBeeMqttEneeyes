@@ -1,134 +1,152 @@
 package service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
 
 import model.Position;
 import xbee.MainApp;
 
 public class JsonService {
 		
-	private static String directoryBase = JsonService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-	private JSONObject jsonObject = new JSONObject();
-	private JSONParser jsonParser  = new JSONParser();
-	
+private static String directoryBase = JsonService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 	
 	private String nameFile;
 	
-	public void createJackson() {
-	
+	public JsonService() {		
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void save(Position position) {		
+	public JsonService(String nameFile) {
 		
-		try {
-			Class<?> clazzOrigem = position.getClass();
-			
-			for (Field field : clazzOrigem.getDeclaredFields()) {
-				field.setAccessible(true);
-				jsonObject.put(field.getName(),  field.get(position));	        
-			}	
-			
-			
-			File file = getFile();		
-			FileWriter fileWriter = new FileWriter(file);			
-			
-			fileWriter.write(jsonObject.toJSONString());
-			fileWriter.close();
-			
-			System.out.println("Successfully Copied JSON Object to File...");
-			
-		}
-		catch (Exception e) {
-			// TODO: handle exception
-			MainApp.logger.error(e.getMessage());
-		}
-		
-		
+		this.setNameFile(nameFile);
+		this.createFile();	
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void create(List<Position> positions) {
+	public void update(Position position) {
 		
-		JsonArray jsonArray = new JsonArray();
+		File file = getFile();	
+		List<Position> positions = fromJsonArray(file);
+		
+		if (find(position)) {
+			
+			int index = positions.indexOf(positions); 
+			
+			positions.set(index, position);						
+		}
+		else {
+			positions.add(position);
+		}
+		
+		save(positions);		
+	}
+	
+	public void save(List<Position> positions) {
+		
+		JSONArray positionList =  fromPositionToJsonArray(positions);		
+		saveFile(positionList.toJSONString());
+	}
+	
+	public List<Position> read() {
+		
+		File file = getFile();
+		return fromJsonArray(file);
+    		
+	}
+	
+	public Boolean find(Position position) {
+		
+		File file = getFile();		
+		List<Position> positions = fromJsonArray(file);
+		
+		return positions.contains(positions);		
+	} 
+	
+	@SuppressWarnings("unchecked")
+	private JSONArray fromPositionToJsonArray(List<Position> positions) {
+		
+		JSONObject jsonPosition = new JSONObject();		
+		JSONArray positionList = new JSONArray();
 		
 		try {					
 			
 			for (Position position : positions) {
 						
-				Class<?> clazzOrigem = position.getClass();
-		
-				Map<String, Object> item = new HashMap<String, Object>();
-				
+				Class<?> clazzOrigem = position.getClass();				
 				for (Field field : clazzOrigem.getDeclaredFields()) {
-					field.setAccessible(true);
-					item.put(field.getName(),  field.get(position));
-				}
-							
-				jsonArray.add(JSONValue.toJSONString(item));				
-			}								
+					field.setAccessible(true);					
+					jsonPosition.put(field.getName(),  field.get(position));
+				}							
+
+				positionList.add(jsonPosition);
+			}				
 			
-			JSONObject my_obj = new JSONObject();
-			my_obj.put("Sensors", jsonArray);
-			
-			File file = getFile();		
-			FileWriter fileWriter = new FileWriter(file);			
-			
-			fileWriter.write(my_obj.toJSONString());
-			fileWriter.close();
-			
-			System.out.println("Successfully Copied JSON Object to File...");
+			System.out.println("Successfully CREATED JSON From Entity... " + positionList.toJSONString());							
 			
 		}
 		catch (Exception e) {
-			// TODO: handle exception
 			MainApp.logger.error(e.getMessage());
 		}
 		
+		return positionList;	
+	}	
+	
+	private List<Position> fromJsonArray(File file) {
 		
+        JSONParser jsonParser = new JSONParser();
+        ObjectMapper mapperObj = new ObjectMapper();
+        List<Position> positions = new ArrayList<Position>();
+        
+        try {       
+        	
+        	FileReader reader = new FileReader(file);
+        			
+            Object obj = jsonParser.parse(reader);            
+            JSONArray positionList = (JSONArray) obj;            
+            
+            positions = mapperObj.readValue(positionList.toJSONString(), new TypeReference<List<Position>>(){});      
+            
+            System.out.println("Successfully CREATED Object From Json... " + positionList);
+ 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        return positions;
 	}
 	
-	public void update(Position position) {
+	public void saveFile(String jsonString) {
 		
-		try {
-		
-			File file = getFile();				
-			jsonObject = (JSONObject) jsonParser.parse(new FileReader(file));
+		try {	
+			File file = getFile();		
+			FileWriter fileWriter = new FileWriter(file);			
 			
-			JSONArray msg = (JSONArray) jsonObject.get("Sensors");
-            Iterator<String> iterator = msg.iterator();
-            
-            Map<String,String> resultMap = new HashMap<String,String>();
-            ObjectMapper mapperObj = new ObjectMapper();                        
-            
-            resultMap = mapperObj.readValue(msg.get(0).toString(), new TypeReference<HashMap<String,String>>(){});
-              
-            while (iterator.hasNext()) {            	            	           	
-                System.out.println(iterator.next());                
-            }						
-		
+			fileWriter.write(jsonString);
+			fileWriter.close();
+			
+			System.out.println("Successfully SAVE File on disk..." + file);
+			
 		}
 		catch (Exception e) {
-			MainApp.logger.error("Erro na leitura do arquivo (Json), verifique ::" + e.getMessage());
-		}
-		
+			MainApp.logger.error(e.getMessage());
+		}		
 	}
 		
 	public void createFile() {	
@@ -151,8 +169,7 @@ public class JsonService {
 		File file = null; 
 		
 		try {
-			decodedPath = URLDecoder.decode(directoryBase, "UTF-8");
-			
+			decodedPath = URLDecoder.decode(directoryBase, "UTF-8");			
 			file = new File(decodedPath + this.nameFile);
 						
 		} catch (Exception e) {
@@ -169,6 +186,6 @@ public class JsonService {
 
 	public void setNameFile(String nameFile) {
 		this.nameFile = nameFile;
-	}	
+	}
 
 }

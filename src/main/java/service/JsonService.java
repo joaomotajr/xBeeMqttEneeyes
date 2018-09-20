@@ -3,6 +3,7 @@ package service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ import xbee.MainApp;
 
 public class JsonService {
 		
-private static String directoryBase = JsonService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+	private static String directoryBase = JsonService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+	private static String directoryDB = "DB";
 	
 	private String nameFile;
 	
@@ -153,12 +155,12 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 
 	public File getFile() {
 		
-		String decodedPath = null;
-		File file = null; 
 		
-		try {
-			decodedPath = URLDecoder.decode(directoryBase, "UTF-8");			
-			file = new File(decodedPath + this.nameFile);
+		File file = null;
+				
+		try {			
+			
+			file = new File(getPath() + File.separatorChar + this.nameFile);
 						
 		} catch (Exception e) {
 			
@@ -166,6 +168,21 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 		}
 		
 		return file;
+	}
+	
+	private String getPath() throws UnsupportedEncodingException {
+		
+		String decodedPath = URLDecoder.decode(directoryBase, "UTF-8");
+		File baseDir = new File(decodedPath);
+		
+		File dir = new File(baseDir.getParent().toString() + File.separatorChar + directoryDB);
+						
+		if(!dir.exists())
+			dir.mkdir();
+			
+		String pathFile = dir.toString();	
+		
+		return pathFile;
 	}
 
 	public String getNameFile() {

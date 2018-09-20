@@ -3,22 +3,29 @@ package model;
 import java.math.BigDecimal;
 
 public class Position {
+	
 	private String key;
 	private String nome;
 	private String tipo;
 	private Integer id;
 	private BigDecimal value;
+	private Double minValue;
+	private Double maxValue;
+	private String unidade; 
 	
 	public Position() {		
 	}
 	
-	public Position(String key, String nome, String tipo, int id, BigDecimal value) {
+	public Position(String key, String nome, String tipo, String unidade, int id, BigDecimal value, Double minValue, Double maxValue) {
 		
 		this.key = key;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.id = id;
+		this.unidade = unidade;				
 		this.value = value;
+		this.maxValue = maxValue;
+		this.minValue = minValue;
 	}
 	
 	public String getKey() {
@@ -93,6 +100,24 @@ public class Position {
 	}
 	public void setValue(BigDecimal value) {
 		this.value = value;
+	}
+	public Double getMinValue() {
+		return minValue;
+	}
+	public void setMinValue(Double minValue) {
+		this.minValue = minValue;
+	}
+	public Double getMaxValue() {
+		return maxValue;
+	}
+	public void setMaxValue(Double maxValue) {
+		this.maxValue = maxValue;
+	}
+	public String getUnidade() {
+		return unidade;
+	}
+	public void setUnidade(String unidade) {
+		this.unidade = unidade;
 	}
 
 }

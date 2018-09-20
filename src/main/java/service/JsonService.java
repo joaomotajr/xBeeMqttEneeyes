@@ -1,10 +1,8 @@
 package service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +40,7 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 		
 		if (find(position)) {
 			
-			int index = positions.indexOf(positions); 
+			int index = positions.indexOf(position); 
 			
 			positions.set(index, position);						
 		}
@@ -51,7 +48,8 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 			positions.add(position);
 		}
 		
-		save(positions);		
+		save(positions);
+		MainApp.logger.info("JS Service - Updated :: " + position.getNome());  
 	}
 	
 	public void save(List<Position> positions) {
@@ -72,7 +70,7 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 		File file = getFile();		
 		List<Position> positions = fromJsonArray(file);
 		
-		return positions.contains(positions);		
+		return positions.contains(position);		
 	} 
 	
 	@SuppressWarnings("unchecked")
@@ -92,9 +90,7 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 				}							
 
 				positionList.add(jsonPosition);
-			}				
-			
-			System.out.println("Successfully CREATED JSON From Entity... " + positionList.toJSONString());							
+			}						
 			
 		}
 		catch (Exception e) {
@@ -118,15 +114,9 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
             JSONArray positionList = (JSONArray) obj;            
             
             positions = mapperObj.readValue(positionList.toJSONString(), new TypeReference<List<Position>>(){});      
-            
-            System.out.println("Successfully CREATED Object From Json... " + positionList);
- 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+             
+        } catch (Exception e) {
+        	MainApp.logger.error("JS Service - Convert to Positon :: " + e.getMessage());        
         }
         
         return positions;
@@ -140,12 +130,10 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 			
 			fileWriter.write(jsonString);
 			fileWriter.close();
-			
-			System.out.println("Successfully SAVE File on disk..." + file);
-			
+						
 		}
 		catch (Exception e) {
-			MainApp.logger.error(e.getMessage());
+			MainApp.logger.error("JS Service - Save File :: " + e.getMessage());
 		}		
 	}
 		
@@ -159,7 +147,7 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 			   file.createNewFile();
 			}
 		} catch (Exception e) {
-			MainApp.logger.error("Erro criação do arquivo (Json), verifique ::" + e.getMessage());
+			MainApp.logger.error("JS Service - Create File :: " + e.getMessage());
 		}		
 	}	
 
@@ -174,7 +162,7 @@ private static String directoryBase = JsonService.class.getProtectionDomain().ge
 						
 		} catch (Exception e) {
 			
-			MainApp.logger.error("Erro obtenção do arquivo (Json), verifique ::" + e.getMessage());						
+			MainApp.logger.error("JS Service - Get File :: " + e.getMessage());						
 		}
 		
 		return file;

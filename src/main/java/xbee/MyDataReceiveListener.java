@@ -51,26 +51,31 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		if(value.length > 1 ) {
 			MainApp.logger.error("Erro de configuração de Sensores, verifique ::" + value);
 			return;
-		}
-				
+		}		
+		
+		messageReceived = messageReceived.replaceAll("\r", "").replaceAll("\n", "");
+		System.getProperty("line.terminator");
 		value = messageReceived.split(";");
 		
 		if(!value[0].contentEquals("EGAS"))
 			return;
 
+		MainApp.logger.info(String.format("MESSAGE Received From MCAdress %s  >> %s ", macAddress, messageReceived));
+		
 		try {
+			String nome = value[1];
 			String id = value[2];
 			String valor = value[3];
 			
-			Publisher.Execute(broker, id, valor);
-			js.update(new Position("E_GAS", "Sensor4", "O", Integer.parseInt(id), new BigDecimal(valor)));
+			Publisher.send(broker, id, valor);
+			js.update(new Position("E_GAS", nome, "O", Integer.parseInt(id), new BigDecimal(Double.parseDouble(valor) )));
 			
 			
 		} catch (Exception e) {
 			MainApp.logger.error(e);
 		}
 		
-		MainApp.logger.info(String.format("From %s >> %s ", macAddress, messageReceived));
+		
 	}
 
 }

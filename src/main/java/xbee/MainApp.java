@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 
-import test.Teste;
+import mqtt.Publisher;
 
 /**
  * XBee Java Library Receive Data sample application.
@@ -32,13 +32,13 @@ public class MainApp {
 	 * @param args Command line arguments.
 	 */
 	public static void main(String[] args) {
-		
-		Teste.populate();
-		
-		Teste.update();
-		
-		Teste.read();
-			
+//		
+//		Teste.populate();
+//		
+//		Teste.update();
+//		
+//		Teste.read();
+//			
 				
 		logger.info("Initialing Integrator XBee -> E-Gas (MQTT-Server)");
 		 
@@ -56,19 +56,22 @@ public class MainApp {
 		
 		logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
 				
-		try {			
+		try {
+
+			if (Publisher.test(broker)) {
 						
-			logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
-			XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
-			myDevice.open();
-			
-			logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
-			
-			MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
-			dataReceiveListener.setBroker(broker);
-			myDevice.addDataListener(dataReceiveListener);
-			
-			System.out.println("\n>> Esperando por Dados dos Routers...");
+				logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+				XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
+				myDevice.open();
+				
+				logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
+				
+				MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
+				dataReceiveListener.setBroker(broker);
+				myDevice.addDataListener(dataReceiveListener);
+				
+				System.out.println("\n>> Esperando por Dados dos Routers...");
+			}
 						
 		} catch (XBeeException e) {
 			

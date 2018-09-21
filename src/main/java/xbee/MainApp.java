@@ -9,7 +9,6 @@ import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 
 import mqtt.Publisher;
-import test.Teste;
 
 /**
  * XBee Java Library Receive Data sample application.
@@ -34,7 +33,7 @@ public class MainApp {
 	 */
 	public static void main(String[] args) {
 //		
-		Teste.populate();
+//		Teste.populate();
 //		
 //		Teste.update();
 //		

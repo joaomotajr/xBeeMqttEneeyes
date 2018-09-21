@@ -31,7 +31,7 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 	 */
 	
 	private String broker;		
-	JsonService js = new JsonService("deviceStatus.json");
+	JsonService js = new JsonService("targetdeviceStatus.json");
 
 	public String getBroker() {
 		return broker;
@@ -64,11 +64,24 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		
 		try {
 			String nome = value[1];
-			String id = value[2];
-			String valor = value[3];
-			
+			String tipo = value[2];
+			String unidade = value[3];
+			String id = value[4];
+			String min = value[5];
+			String max = value[6];
+			String valor = value[7];			
 			Publisher.send(broker, id, valor);
-			js.update(new Position("E_GAS", nome, "O", Integer.parseInt(id), new BigDecimal(Double.parseDouble(valor) )));
+			
+			Position position = new Position();
+			position.setKey(value[0]);
+			position.setNome(nome);
+			position.setTipo(tipo);
+			position.setUnidade(unidade);
+			position.setId(Integer.parseInt(id));
+			position.setValue(new BigDecimal(Double.parseDouble(valor)));
+			position.setMinValue(Double.parseDouble(min));
+			position.setMaxValue(Double.parseDouble(max));			
+			js.update(position);
 			
 			
 		} catch (Exception e) {

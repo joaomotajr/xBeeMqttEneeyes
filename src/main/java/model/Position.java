@@ -47,7 +47,8 @@ public class Position {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());		
+//		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+//		result = prime * result + ((unidade == null) ? 0 : unidade.hashCode());
 		return result;
 	}
 
@@ -59,6 +60,7 @@ public class Position {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		
 		Position other = (Position) obj;
 		if (id == null) {
 			if (other.id != null)
@@ -75,11 +77,16 @@ public class Position {
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
-		if (tipo == null) {
-			if (other.tipo != null)
-				return false;
-		} else if (!tipo.equals(other.tipo))
-			return false;
+//		if (tipo == null) {
+//			if (other.tipo != null)
+//				return false;
+//		} else if (!tipo.equals(other.tipo))
+//			return false;
+//		if (unidade == null) {
+//			if (other.tipo != null)
+//				return false;
+//		} else if (!unidade.equals(other.unidade))
+//			return false;
 		return true;
 	}
 

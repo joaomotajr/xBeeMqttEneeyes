@@ -1,8 +1,5 @@
 package xbee;
 
-
-
-
 import java.math.BigDecimal;
 
 import com.digi.xbee.api.listeners.IDataReceiveListener;
@@ -25,10 +22,6 @@ import service.JsonService;
  *
  */
 public class MyDataReceiveListener implements IDataReceiveListener {
-	/*
-	 * (non-Javadoc)
-	 * @see com.digi.xbee.api.listeners.IDataReceiveListener#dataReceived(com.digi.xbee.api.models.XBeeMessage)
-	 */
 	
 	private String broker;		
 	JsonService js = new JsonService("targetdeviceStatus.json");
@@ -49,7 +42,7 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		String value[] = messageReceived.split("\n");
 		
 		if(value.length > 1 ) {
-			MainApp.logger.error("Erro de configuração de Sensores, verifique ::" + value);
+			MainApp.logger.error("Erro de configuraï¿½ï¿½o de Sensores, verifique ::" + value);
 			return;
 		}		
 		
@@ -64,30 +57,29 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		
 		try {
 			String nome = value[1];
-			String tipo = value[2];
-			String unidade = value[3];
-			String id = value[4];
-			String min = value[5];
-			String max = value[6];
-			String valor = value[7];			
+			String id = value[2];			
+			String tipo = value[3];
+			String unidade = value[4];
+			String valor = value[5];
+			String min = value[6];
+			String max = value[7];						
 			Publisher.send(broker, id, valor);
 			
 			Position position = new Position();
-			position.setKey(value[0]);
+			position.setKey("E_GAS");
 			position.setNome(nome);
+			position.setId(Integer.parseInt(id));
 			position.setTipo(tipo);
 			position.setUnidade(unidade);
-			position.setId(Integer.parseInt(id));
 			position.setValue(new BigDecimal(Double.parseDouble(valor)));
 			position.setMinValue(Double.parseDouble(min));
 			position.setMaxValue(Double.parseDouble(max));			
-			js.update(position);
+			js.update(position);						
 			
 			
 		} catch (Exception e) {
 			MainApp.logger.error(e);
-		}
-		
+		}	
 		
 	}
 

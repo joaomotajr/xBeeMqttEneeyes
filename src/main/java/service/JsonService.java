@@ -7,10 +7,11 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -78,20 +79,22 @@ public class JsonService {
 	@SuppressWarnings("unchecked")
 	private JSONArray fromPositionToJsonArray(List<Position> positions) {
 		
-		JSONObject jsonPosition = new JSONObject();		
 		JSONArray positionList = new JSONArray();
 		
 		try {					
 			
 			for (Position position : positions) {
-						
+				
+				Map<String, Object> mp  = new HashMap<String, Object>();
 				Class<?> clazzOrigem = position.getClass();				
 				for (Field field : clazzOrigem.getDeclaredFields()) {
 					field.setAccessible(true);					
-					jsonPosition.put(field.getName(),  field.get(position));
-				}							
 
-				positionList.add(jsonPosition);
+					mp.put(field.getName(),  field.get(position));
+				}				
+
+				positionList.add(mp);
+				
 			}						
 			
 		}

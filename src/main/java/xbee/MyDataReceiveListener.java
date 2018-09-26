@@ -57,12 +57,12 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		
 		try {
 			String nome = value[1];
-			String id = value[2];			
-			String tipo = value[3];
-			String unidade = value[4];
-			String valor = value[5];
-			String min = value[6];
-			String max = value[7];						
+			String tipo = value[2];			
+			String unidade = value[3];
+			String id = value[4];			
+			String min = value[5];
+			String max = value[6];
+			String valor = value[7];
 			Publisher.send(broker, id, valor);
 			
 			Position position = new Position();

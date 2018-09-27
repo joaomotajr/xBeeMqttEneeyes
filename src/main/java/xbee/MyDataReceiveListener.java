@@ -63,6 +63,7 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 			String min = value[5];
 			String max = value[6];
 			String valor = value[7];
+			String milliTime = value[8];
 			Publisher.send(broker, id, valor);
 			
 			Position position = new Position();
@@ -74,6 +75,7 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 			position.setValue(new BigDecimal(Double.parseDouble(valor)));
 			position.setMinValue(Double.parseDouble(min));
 			position.setMaxValue(Double.parseDouble(max));			
+			position.setMilliTime(new BigDecimal(milliTime));
 			js.update(position);						
 			
 			

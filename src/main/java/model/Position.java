@@ -7,16 +7,17 @@ public class Position {
 	private String key;
 	private String nome;
 	private String tipo;
+	private String unidade;
 	private Integer id;
 	private BigDecimal value;
 	private Double minValue;
 	private Double maxValue;
-	private String unidade; 
+	private BigDecimal milliTime;	 
 	
 	public Position() {		
 	}
 	
-	public Position(String key, String nome, String tipo, String unidade, int id, BigDecimal value, Double minValue, Double maxValue) {
+	public Position(String key, String nome, String tipo, String unidade, int id, BigDecimal value, Double minValue, Double maxValue, BigDecimal milliTime) {
 		
 		this.key = key;
 		this.nome = nome;
@@ -26,6 +27,7 @@ public class Position {
 		this.value = value;
 		this.maxValue = maxValue;
 		this.minValue = minValue;
+		this.milliTime = milliTime;
 	}
 	
 	public String getKey() {
@@ -114,5 +116,10 @@ public class Position {
 	public void setUnidade(String unidade) {
 		this.unidade = unidade;
 	}
-
+	public BigDecimal getMilliTime() {
+		return milliTime;
+	}
+	public void setMilliTime(BigDecimal milliTime) {
+		this.milliTime = milliTime;
+	}
 }

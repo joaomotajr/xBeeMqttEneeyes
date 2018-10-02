@@ -9,8 +9,6 @@ import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 
 import mqtt.Publisher;
-import test.Teste;
-
 /**
  * XBee Java Library Receive Data sample application.
  * 
@@ -33,12 +31,7 @@ public class MainApp {
 	 * @param args Command line arguments.
 	 */
 	public static void main(String[] args) {
-//		
-		Teste.populate();
-		
-		Teste.update();
-//		
-//		Teste.read();//			
+
 				
 		logger.info("Initialing Integrator XBee -> E-Gas (MQTT-Server)");
 		 

@@ -31,7 +31,6 @@ public class MainApp {
 	 * @param args Command line arguments.
 	 */
 	public static void main(String[] args) {
-
 				
 		logger.info("Initialing Integrator XBee -> E-Gas (MQTT-Server)");
 		 
@@ -39,15 +38,21 @@ public class MainApp {
 		System.out.println(" |  XBee ENEEYES - PUBLISHER TO MQTT       |");
 		System.out.println(" +-----------------------------------------+\n");
 		
-		if (args.length < 2 || args[0].isEmpty() ) {
-			logger.error("Você deve especificar: IP:Porta do Broker e Porta COM do xBee");			
+		if (args.length != 3) {
+			logger.error("Você deve especificar: Integração[none, mqtt],  IP:Porta do Broker e Porta COM do xBee");			
 			System.exit(1);
 		}				
 		
-		String broker = "tcp://" + args[0];
-		String comPort = args[1];
+		String sinc = args[0].toLowerCase();
+		String broker = "tcp://" + args[1];		
+		String comPort = args[2];
 		
-		logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+		if(sinc.equals("none"))		
+			logger.info("Integração com E-Gas Desabilitada..");
+		else if(sinc.equals("mqtt"))
+			logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);		
+		else 
+			logger.info("Parâmetro Integração Inválido");
 				
 		try {
 
@@ -61,6 +66,7 @@ public class MainApp {
 				
 				MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
 				dataReceiveListener.setBroker(broker);
+				dataReceiveListener.setSinc(sinc);
 				myDevice.addDataListener(dataReceiveListener);
 				
 				System.out.println("\n>> Esperando por Dados dos Routers...");

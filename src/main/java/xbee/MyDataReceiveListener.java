@@ -24,6 +24,7 @@ import service.JsonService;
 public class MyDataReceiveListener implements IDataReceiveListener {
 	
 	private String broker;		
+	private String sinc;
 	JsonService js = new JsonService("targetdeviceStatus.json");
 
 	public String getBroker() {
@@ -32,6 +33,14 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 
 	public void setBroker(String broker) {
 		this.broker = broker;
+	}	
+
+	public String getSinc() {
+		return sinc;
+	}
+
+	public void setSinc(String sinc) {
+		this.sinc = sinc;
 	}
 
 	public void dataReceived(XBeeMessage xbeeMessage) {
@@ -42,7 +51,7 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		String value[] = messageReceived.split("\n");
 		
 		if(value.length > 1 ) {
-			MainApp.logger.error("Erro de configuraï¿½ï¿½o de Sensores, verifique ::" + value);
+			MainApp.logger.error("Erro de configuração de Sensores, verifique ::" + value);
 			return;
 		}		
 		
@@ -64,7 +73,9 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 			String max = value[6];
 			String valor = value[7];
 			String milliTime = value[8];
-			Publisher.send(broker, id, valor);
+			
+			if (sinc.equals("mqtt"))
+				Publisher.send(broker, id, valor);
 			
 			Position position = new Position();
 			position.setKey("E_GAS");

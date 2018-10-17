@@ -71,8 +71,11 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 			String id = value[4];			
 			String min = value[5];
 			String max = value[6];
-			String valor = value[7];
-			String milliTime = value[8];
+			String alarm1 = value[7];
+			String alarm2 = value[8];
+			String valor = value[9];
+			String milliTime = value[10];
+			
 			
 			if (sinc.equals("mqtt"))
 				Publisher.send(broker, id, valor);
@@ -85,10 +88,11 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 			position.setUnidade(unidade);
 			position.setValue(new BigDecimal(Double.parseDouble(valor)));
 			position.setMinValue(Double.parseDouble(min));
-			position.setMaxValue(Double.parseDouble(max));			
-			position.setMilliTime(new BigDecimal(milliTime));
-			js.update(position);						
-			
+			position.setMaxValue(Double.parseDouble(max));
+			position.setAlarm1(Double.parseDouble(alarm1));
+			position.setAlarm2(Double.parseDouble(alarm2));
+			position.setMilliTime(new BigDecimal(milliTime));			
+			js.update(position);			
 			
 		} catch (Exception e) {
 			MainApp.logger.error(e);

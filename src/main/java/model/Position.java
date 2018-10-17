@@ -8,26 +8,42 @@ public class Position {
 	private String nome;
 	private String tipo;
 	private String unidade;
-	private Integer id;
-	private BigDecimal value;
+	private Integer id;	
 	private Double minValue;
 	private Double maxValue;
+	private Double alarm1;
+	private Double alarm2;
+	private BigDecimal value;
 	private BigDecimal milliTime;	 
 	
 	public Position() {		
 	}
 	
-	public Position(String key, String nome, String tipo, String unidade, int id, BigDecimal value, Double minValue, Double maxValue, BigDecimal milliTime) {
+	public Position(String key, 
+			String nome, 
+			String tipo, 
+			String unidade, 
+			int id,			 
+			Double minValue, 
+			Double maxValue,
+			Double alarm1,
+			Double alarm2,
+			BigDecimal value,
+			BigDecimal milliTime			
+			) {
 		
 		this.key = key;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.id = id;
-		this.unidade = unidade;				
-		this.value = value;
+		this.unidade = unidade;		
 		this.maxValue = maxValue;
 		this.minValue = minValue;
+		this.alarm1 = alarm1;
+		this.alarm2 = alarm2;
+		this.value = value;
 		this.milliTime = milliTime;
+		
 	}
 	
 	public String getKey() {
@@ -122,4 +138,16 @@ public class Position {
 	public void setMilliTime(BigDecimal milliTime) {
 		this.milliTime = milliTime;
 	}
+	public Double getAlarm1() {
+		return alarm1;
+	}
+	public void setAlarm1(Double alarm1) {
+		this.alarm1 = alarm1;
+	}
+	public Double getAlarm2() {
+		return alarm2;
+	}
+	public void setAlarm2(Double alarm2) {
+		this.alarm2 = alarm2;
+	}	
 }

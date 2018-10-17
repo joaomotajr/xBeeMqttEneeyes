@@ -76,9 +76,9 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 //			String milliTime = value[10];
 			
 			String nome = value[1];			
-			String id = value[4];			
-			String valor = value[9];
-			String milliTime = value[10];			
+			String id = value[2];			
+			String valor = value[3];
+			String milliTime = value[4];			
 			
 			if (sinc.equals("mqtt"))
 				Publisher.send(broker, id, valor);

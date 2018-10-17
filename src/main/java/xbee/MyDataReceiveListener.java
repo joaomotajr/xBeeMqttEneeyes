@@ -6,9 +6,8 @@ import com.digi.xbee.api.listeners.IDataReceiveListener;
 import com.digi.xbee.api.models.XBee64BitAddress;
 import com.digi.xbee.api.models.XBeeMessage;
 
-import model.Position;
 import mqtt.Publisher;
-import service.JsonService;
+import service.UpdateDeviceFactory;
 
 /**
  * Class to manage the XBee received data that was sent by other modules in the 
@@ -25,7 +24,7 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 	
 	private String broker;		
 	private String sinc;
-	JsonService js = new JsonService("targetdeviceStatus.json");
+//	JsonPositionService js = new JsonPositionService("targetdeviceStatus.json");
 
 	public String getBroker() {
 		return broker;
@@ -65,34 +64,41 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		MainApp.logger.info(String.format("MESSAGE Received From MCAdress %s  >> %s ", macAddress, messageReceived));
 		
 		try {
-			String nome = value[1];
-			String tipo = value[2];			
-			String unidade = value[3];
-			String id = value[4];			
-			String min = value[5];
-			String max = value[6];
-			String alarm1 = value[7];
-			String alarm2 = value[8];
-			String valor = value[9];
-			String milliTime = value[10];
+//			String nome = value[1];
+//			String tipo = value[2];			
+//			String unidade = value[3];
+//			String id = value[4];			
+//			String min = value[5];
+//			String max = value[6];
+//			String alarm1 = value[7];
+//			String alarm2 = value[8];
+//			String valor = value[9];
+//			String milliTime = value[10];
 			
+			String nome = value[1];			
+			String id = value[4];			
+			String valor = value[9];
+			String milliTime = value[10];			
 			
 			if (sinc.equals("mqtt"))
 				Publisher.send(broker, id, valor);
 			
-			Position position = new Position();
-			position.setKey("E_GAS");
-			position.setNome(nome);
-			position.setId(Integer.parseInt(id));
-			position.setTipo(tipo);
-			position.setUnidade(unidade);
-			position.setValue(new BigDecimal(Double.parseDouble(valor)));
-			position.setMinValue(Double.parseDouble(min));
-			position.setMaxValue(Double.parseDouble(max));
-			position.setAlarm1(Double.parseDouble(alarm1));
-			position.setAlarm2(Double.parseDouble(alarm2));
-			position.setMilliTime(new BigDecimal(milliTime));			
-			js.update(position);			
+//			Position position = new Position();
+//			position.setKey("E_GAS");
+//			position.setNome(nome);
+//			position.setId(Integer.parseInt(id));
+//			position.setTipo(tipo);
+//			position.setUnidade(unidade);
+//			position.setValue(new BigDecimal(Double.parseDouble(valor)));
+//			position.setMinValue(Double.parseDouble(min));
+//			position.setMaxValue(Double.parseDouble(max));
+//			position.setAlarm1(Double.parseDouble(alarm1));
+//			position.setAlarm2(Double.parseDouble(alarm2));
+//			position.setMilliTime(new BigDecimal(milliTime));			
+//			js.update(position);
+			
+			UpdateDeviceFactory uds = new UpdateDeviceFactory();
+			uds.updatePosition("E_GAS", nome, Integer.parseInt(id), new BigDecimal(Double.parseDouble(valor)), new BigDecimal(milliTime));		
 			
 		} catch (Exception e) {
 			MainApp.logger.error(e);

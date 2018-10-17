@@ -20,17 +20,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Position;
 import xbee.MainApp;
 
-public class JsonService {
+public class JsonPositionService {
 		
-	private static String directoryBase = JsonService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+	private static String directoryBase = JsonPositionService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 	private static String directoryDB = "DB";
 	
 	private String nameFile;
 	
-	public JsonService() {		
+	public JsonPositionService() {		
 	}
 	
-	public JsonService(String nameFile) {
+	public JsonPositionService(String nameFile) {
 		
 		this.setNameFile(nameFile);
 		this.createFile();	

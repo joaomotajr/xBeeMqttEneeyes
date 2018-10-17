@@ -8,6 +8,7 @@ public class Position {
 	private String nome;
 	private String tipo;
 	private String unidade;
+	private String detail;
 	private Integer id;	
 	private Double minValue;
 	private Double maxValue;
@@ -22,7 +23,8 @@ public class Position {
 	public Position(String key, 
 			String nome, 
 			String tipo, 
-			String unidade, 
+			String unidade,
+			String detail,
 			int id,			 
 			Double minValue, 
 			Double maxValue,
@@ -36,6 +38,7 @@ public class Position {
 		this.nome = nome;
 		this.tipo = tipo;
 		this.id = id;
+		this.detail = detail;
 		this.unidade = unidade;		
 		this.maxValue = maxValue;
 		this.minValue = minValue;
@@ -128,6 +131,12 @@ public class Position {
 	}
 	public String getUnidade() {
 		return unidade;
+	}	
+	public String getDetail() {
+		return detail;
+	}
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 	public void setUnidade(String unidade) {
 		this.unidade = unidade;

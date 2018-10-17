@@ -8,7 +8,10 @@ import org.apache.log4j.Logger;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 
+import model.Config;
 import mqtt.Publisher;
+import service.UpdateDeviceFactory;
+import test.Teste;
 /**
  * XBee Java Library Receive Data sample application.
  * 
@@ -33,6 +36,12 @@ public class MainApp {
 	public static void main(String[] args) {
 				
 		logger.info("Initialing Integrator XBee -> E-Gas (MQTT-Server)");
+		
+//		UpdateDeviceFactory uds = new UpdateDeviceFactory();
+//		Config config = uds.getConfig(120);						
+//		Teste.populate();
+//		Teste.update();
+//		Teste.testeConfig();		
 		 
 		System.out.println(" +-----------------------------------------+");
 		System.out.println(" |  XBee ENEEYES - PUBLISHER TO MQTT       |");

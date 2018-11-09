@@ -8,10 +8,7 @@ import org.apache.log4j.Logger;
 import com.digi.xbee.api.XBeeDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 
-import model.Config;
 import mqtt.Publisher;
-import service.UpdateDeviceFactory;
-import test.Teste;
 /**
  * XBee Java Library Receive Data sample application.
  * 
@@ -56,35 +53,50 @@ public class MainApp {
 		String broker = "tcp://" + args[1];		
 		String comPort = args[2];
 		
-		if(sinc.equals("none"))		
+		if(sinc.equals("none")) {		
 			logger.info("Integração com E-Gas Desabilitada..");
-		else if(sinc.equals("mqtt"))
-			logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);		
-		else 
-			logger.info("Parâmetro Integração Inválido");
-				
-		try {
-
-			if (Publisher.test(broker)) {
+		
+			logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+			XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
 						
-				logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
-				XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
-				myDevice.open();
-				
-				logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
-				
-				MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
-				dataReceiveListener.setBroker(broker);
-				dataReceiveListener.setSinc(sinc);
-				myDevice.addDataListener(dataReceiveListener);
-				
-				System.out.println("\n>> Esperando por Dados dos Routers...");
-			}
-						
-		} catch (XBeeException e) {
+			logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
 			
-			logger.error("Ops! Há Algo errado, verifique\n", e);
-			System.exit(1);
+			MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
+			dataReceiveListener.setBroker(broker);
+			dataReceiveListener.setSinc(sinc);
+			myDevice.addDataListener(dataReceiveListener);
+			
+			System.out.println("\n>> Esperando por Dados dos Routers...");
 		}
+		else if(sinc.equals("mqtt")) {
+			logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+			
+			try {
+
+				if (Publisher.test(broker)) {
+							
+					logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+					XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
+					myDevice.open();
+					
+					logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
+					
+					MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
+					dataReceiveListener.setBroker(broker);
+					dataReceiveListener.setSinc(sinc);
+					myDevice.addDataListener(dataReceiveListener);
+					
+					System.out.println("\n>> Esperando por Dados dos Routers...");
+				}
+							
+			} catch (XBeeException e) {
+				
+				logger.error("Ops! Há Algo errado, verifique\n", e);
+				System.exit(1);
+			}
+		}
+		else 
+			logger.info("Parâmetro Integração Inválido, verifique");				
+		
 	}
 }

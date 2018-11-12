@@ -45,7 +45,7 @@ public class MainApp {
 		System.out.println(" +-----------------------------------------+\n");
 		
 		if (args.length != 3) {
-			logger.error("Você deve especificar: Integração[none, mqtt],  IP:Porta do Broker e Porta COM do xBee");			
+			logger.error("VocÃª deve especificar: IntegraÃ§Ã£o[none, mqtt],  IP:Porta do Broker e Porta COM do xBee");			
 			System.exit(1);
 		}				
 		
@@ -53,12 +53,25 @@ public class MainApp {
 		String broker = "tcp://" + args[1];		
 		String comPort = args[2];
 		
-		if(sinc.equals("none")) {		
-			logger.info("Integração com E-Gas Desabilitada..");
-		
+		if(sinc.equals("none"))		
+			logger.info("IntegraÃ§Ã£o com E-Gas Desabilitada..");
+		else if(sinc.equals("mqtt")) {
+			logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+			
+			if (!Publisher.test(broker)) { 
+				logger.error("Ops! Teste do MQTT Falhou, verifique\n");
+				System.exit(1);
+			}
+		}
+		else 
+			logger.info("Parametro IntegraÃ§Ã£o InvÃ¡lido");
+				
+		try {			
+						
 			logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
 			XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
-						
+			myDevice.open();
+			
 			logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
 			
 			MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
@@ -66,37 +79,13 @@ public class MainApp {
 			dataReceiveListener.setSinc(sinc);
 			myDevice.addDataListener(dataReceiveListener);
 			
-			System.out.println("\n>> Esperando por Dados dos Routers...");
-		}
-		else if(sinc.equals("mqtt")) {
-			logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
+			System.out.println("\n>> Esperando por Dados dos Routers...");			
+						
+		} catch (XBeeException e) {
 			
-			try {
-
-				if (Publisher.test(broker)) {
-							
-					logger.info("Checando xBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
-					XBeeDevice myDevice = new XBeeDevice(comPort, BAUD_RATE);
-					myDevice.open();
-					
-					logger.info("XBee :: Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE + " OK");
-					
-					MyDataReceiveListener dataReceiveListener = new MyDataReceiveListener();
-					dataReceiveListener.setBroker(broker);
-					dataReceiveListener.setSinc(sinc);
-					myDevice.addDataListener(dataReceiveListener);
-					
-					System.out.println("\n>> Esperando por Dados dos Routers...");
-				}
-							
-			} catch (XBeeException e) {
-				
-				logger.error("Ops! Há Algo errado, verifique\n", e);
-				System.exit(1);
-			}
-		}
-		else 
-			logger.info("Parâmetro Integração Inválido, verifique");				
+			logger.error("Ops! Algo errado, verifique\n", e);
+			System.exit(1);
+		}					
 		
 	}
 }

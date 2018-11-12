@@ -16,6 +16,8 @@ public class Config {
 	
 	public Config(
 			int id,			 
+			String tipo,
+			String unidade,
 			Double minValue, 
 			Double maxValue,
 			Double alarm1,
@@ -23,7 +25,9 @@ public class Config {
 			String detail						
 			) {		
 		
-		this.id = id;				
+		this.id = id;		
+		this.tipo = tipo;
+		this.unidade = unidade;
 		this.maxValue = maxValue;
 		this.minValue = minValue;
 		this.alarm1 = alarm1;
@@ -107,6 +111,5 @@ public class Config {
 
 	public void setUnidade(String unidade) {
 		this.unidade = unidade;
-	}
-	
+	}	
 }

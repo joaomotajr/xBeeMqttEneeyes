@@ -45,6 +45,7 @@ public class UpdateDeviceFactory {
 		position.setAlarm1(config.getAlarm1());
 		position.setAlarm2(config.getAlarm2());
 		position.setMilliTime(milliTime);
+		position.setDetail(config.getDetail());
 		
 		jsPosition.update(position);
 		

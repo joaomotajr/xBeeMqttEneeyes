@@ -1,7 +1,7 @@
 xBeeMqttEneeyes
 
 #call on command line windows
-java -Dlog4j.configuration=file:///%CD%\cfg\log4j.properties -jar xBeeMqttEneeyes-0.0.1-SNAPSHOT-jar-with-dependencies.jar 177.144.134.145 com1
+java -Dlog4j.configuration=file:///%CD%\cfg\log4j.properties -jar xBeeMqttEneeyes-0.0.1-SNAPSHOT-jar-with-dependencies.jar mqtt 177.144.134.145 COM1
 
 
 #call on command line linux

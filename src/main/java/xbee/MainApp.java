@@ -45,7 +45,7 @@ public class MainApp {
 		System.out.println(" +-----------------------------------------+\n");
 		
 		if (args.length != 3) {
-			logger.error("VocÃª deve especificar: IntegraÃ§Ã£o[none, mqtt],  IP:Porta do Broker e Porta COM do xBee");			
+			logger.error("Você deve especificar: Integração[none, mqtt],  IP:Porta do Broker e Porta COM do xBee");			
 			System.exit(1);
 		}				
 		
@@ -54,7 +54,7 @@ public class MainApp {
 		String comPort = args[2];
 		
 		if(sinc.equals("none"))		
-			logger.info("IntegraÃ§Ã£o com E-Gas Desabilitada..");
+			logger.info("Integração com E-Gas Desabilitada..");
 		else if(sinc.equals("mqtt")) {
 			logger.info("MQTT Broker IP  :: " + broker + " ||  Virtual Usb Port / TX :: " + comPort + "/" + BAUD_RATE);
 			
@@ -64,7 +64,7 @@ public class MainApp {
 			}
 		}
 		else 
-			logger.info("Parametro IntegraÃ§Ã£o InvÃ¡lido");
+			logger.info("Parametro Integração Inválido");
 				
 		try {			
 						

@@ -25,7 +25,6 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 
 	private String broker;
 	private String sinc;
-	// JsonPositionService js = new JsonPositionService("targetdeviceStatus.json");
 
 	public String getBroker() {
 		return broker;
@@ -51,16 +50,23 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 		String value[] = messageReceived.split("\n");
 
 		if (value.length > 1) {
-			MainApp.logger.error("Erro de configuração de Sensores, verifique ::" + messageReceived);
+			MainApp.logger.error("Erro de configuração de Sensores (1), verifique ::" + messageReceived);
 			return;
 		}
 
-		messageReceived = messageReceived.replaceAll("\r", "").replaceAll("\n", "");
-		System.getProperty("line.terminator");
-		value = messageReceived.split(";");
-
-		if (!value[0].contentEquals("EGAS"))
+		try {
+			messageReceived = messageReceived.replaceAll("\r", "").replaceAll("\n", "");
+			System.getProperty("line.terminator");
+			value = messageReceived.split(";");		
+		} catch (Exception e) {
+			MainApp.logger.error("Erro de configuração de Sensores (2), verifique ::" + messageReceived);
 			return;
+		}
+		
+		if (!value[0].contentEquals("EGAS")) {
+			MainApp.logger.error("Erro de configuração de Sensores (3), verifique ::" + messageReceived);
+			return;
+		}
 
 		MainApp.logger.info(String.format("MESSAGE Received From MCAdress %s  >> %s ", macAddress, messageReceived));
 
@@ -69,7 +75,21 @@ public class MyDataReceiveListener implements IDataReceiveListener {
 			String id = value[2];
 			String valor = value[3];
 			String milliTime = value[4];
-
+			
+			Double checkValue = Double.parseDouble(valor);
+			
+			if(checkValue < 0.0) {
+				valor = "0";
+			}
+			else if ((id.equals("123") || id.equals("126")) && checkValue > 10) {
+				checkValue /=5;
+				valor = checkValue.toString();
+			}
+			else if(id.equals("136") && checkValue > 10) {
+				checkValue /=1.3;
+				valor = checkValue.toString();
+			}
+			
 			if (sinc.equals("mqtt"))
 				Publisher.send(broker, id, valor);
 

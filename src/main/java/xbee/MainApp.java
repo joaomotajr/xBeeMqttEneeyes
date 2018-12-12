@@ -79,13 +79,15 @@ public class MainApp {
 			dataReceiveListener.setSinc(sinc);
 			myDevice.addDataListener(dataReceiveListener);
 			
-			System.out.println("\n>> Esperando por Dados dos Routers...");			
+			logger.info("Muito Bem - Waiting Routers ...");			
 						
 		} catch (XBeeException e) {
 			
 			logger.error("Ops! Algo errado, verifique\n", e);
 			System.exit(1);
-		}					
+		}	
+		
+		logger.info("Finalizando");
 		
 	}
 }
